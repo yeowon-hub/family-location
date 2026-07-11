@@ -45,7 +45,7 @@ export function useLocationPublisher(user: User | null) {
     async (point: GeoPoint) => {
       if (!user || !household || !sharingEnabled) return
 
-      const ok = await upsertMyLocation({
+      const result = await upsertMyLocation({
         householdId: household.id,
         userId: user.id,
         lat: point.lat,
@@ -55,11 +55,13 @@ export function useLocationPublisher(user: User | null) {
         sharingEnabled: true,
       })
 
-      if (ok) {
+      if (result.ok) {
         lastPointRef.current = point
         lastUploadMsRef.current = Date.now()
         setLastUploadedAt(new Date().toISOString())
         setError(null)
+      } else {
+        setError(result.error ?? '위치 전송 실패')
       }
     },
     [user, household, sharingEnabled, displayName],
@@ -120,9 +122,19 @@ export function useLocationPublisher(user: User | null) {
     )
 
     const onVisibility = () => {
-      if (document.visibilityState === 'visible' && lastPointRef.current) {
-        void upload(lastPointRef.current)
-      }
+      if (document.visibilityState !== 'visible') return
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const point: GeoPoint = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            accuracy: pos.coords.accuracy,
+          }
+          void upload(point)
+        },
+        () => undefined,
+        GEO_WATCH_OPTIONS,
+      )
     }
     document.addEventListener('visibilitychange', onVisibility)
 

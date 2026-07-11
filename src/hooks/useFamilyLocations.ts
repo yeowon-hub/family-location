@@ -31,18 +31,33 @@ export function useFamilyLocations(userId: string | undefined) {
   useEffect(() => {
     if (!household) return
 
-    const unsubscribe = subscribeHouseholdLocations(household.id, (updated) => {
-      setLocations((prev) => {
-        const idx = prev.findIndex((l) => l.userId === updated.userId)
-        if (idx === -1) return [...prev, updated]
-        const next = [...prev]
-        next[idx] = updated
-        return next
-      })
-    })
+    const unsubscribe = subscribeHouseholdLocations(
+      household.id,
+      (updated) => {
+        setLocations((prev) => {
+          const idx = prev.findIndex((l) => l.userId === updated.userId)
+          if (idx === -1) return [...prev, updated]
+          const next = [...prev]
+          next[idx] = updated
+          return next
+        })
+      },
+      (status) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          void refresh()
+        }
+      },
+    )
 
-    return unsubscribe ?? undefined
-  }, [household])
+    const pollId = window.setInterval(() => {
+      void refresh()
+    }, 30_000)
+
+    return () => {
+      unsubscribe?.()
+      window.clearInterval(pollId)
+    }
+  }, [household, refresh])
 
   const setSharing = useCallback(
     async (enabled: boolean) => {

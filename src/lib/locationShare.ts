@@ -35,8 +35,8 @@ export async function upsertMyLocation(input: {
   accuracy?: number
   displayName?: string | null
   sharingEnabled: boolean
-}): Promise<boolean> {
-  if (!supabase) return false
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase) return { ok: false, error: 'Supabase가 설정되지 않았습니다' }
 
   const { error } = await supabase.from('member_locations').upsert(
     {
@@ -52,7 +52,8 @@ export async function upsertMyLocation(input: {
     { onConflict: 'user_id' },
   )
 
-  return !error
+  if (error) return { ok: false, error: error.message }
+  return { ok: true }
 }
 
 export async function setLocationSharingEnabled(
@@ -72,6 +73,7 @@ export async function setLocationSharingEnabled(
 export function subscribeHouseholdLocations(
   householdId: string,
   onChange: (location: MemberLocation) => void,
+  onStatus?: (status: string) => void,
 ): (() => void) | null {
   if (!supabase) return null
 
@@ -92,7 +94,9 @@ export function subscribeHouseholdLocations(
         }
       },
     )
-    .subscribe()
+    .subscribe((status) => {
+      onStatus?.(status)
+    })
 
   return () => {
     void supabase!.removeChannel(channel)

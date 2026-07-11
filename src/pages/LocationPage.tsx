@@ -186,7 +186,7 @@ export function LocationPage() {
         </div>
 
         <p className="mt-2 text-center text-[10px] text-gray-400">
-          30m 이상 이동 또는 1분마다만 서버에 전송 · SKT 등 모든 통신사 지원
+          15m 이상 이동 또는 30초마다 서버에 전송 · SKT 등 모든 통신사 지원
         </p>
       </div>
     </div>

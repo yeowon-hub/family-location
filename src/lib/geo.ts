@@ -1,5 +1,5 @@
-export const LOCATION_UPLOAD_INTERVAL_MS = 60_000
-export const LOCATION_MIN_DISTANCE_M = 30
+export const LOCATION_UPLOAD_INTERVAL_MS = 30_000
+export const LOCATION_MIN_DISTANCE_M = 15
 
 export const GEO_WATCH_OPTIONS: PositionOptions = {
   enableHighAccuracy: true,
