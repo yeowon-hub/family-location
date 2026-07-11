@@ -6,6 +6,13 @@
   --color-brand-dark: #357ABD;
   --color-header: #4A90D9;
   --color-header-text: #1a365d;
+  /* Chemo Crosscheck Care — 탭 배지 */
+  --color-chemo-verify: #38BDF8;
+  --color-chemo-manage: #DC143C;
+  --color-chemo-prep: #EA580C;
+  --color-chemo-recognition: #84CC16;
+  --color-chemo-qr: #6B7280;
+  --color-badge-inactive: #E5E7EB;
 }
 
 * {
@@ -31,4 +38,19 @@ body {
 
 .naver-map img {
   max-width: none !important;
+}
+
+@keyframes badge-mismatch-blink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgb(239 68 68 / 0);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 4px rgb(239 68 68 / 0.55);
+  }
+}
+
+.badge-mismatch-blink {
+  animation: badge-mismatch-blink 0.55s ease-in-out 6;
 }

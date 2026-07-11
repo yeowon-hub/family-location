@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { MapPin, Navigation, RefreshCw, Users, ExternalLink, Settings } from 'lucide-react'
+import { MapPin, Navigation, RefreshCw, Users, ExternalLink, Settings, ShieldCheck } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useFamilyLocations } from '@/hooks/useFamilyLocations'
 import { useLiveLocation } from '@/hooks/useLiveLocation'
@@ -71,6 +71,13 @@ export function LocationPage() {
             </p>
           </div>
           <div className="flex gap-2">
+            <Link
+              to="/chemo"
+              className="rounded-full bg-white/95 p-2 shadow-sm backdrop-blur"
+              aria-label="Chemo Crosscheck Care"
+            >
+              <ShieldCheck size={18} className="text-gray-600" />
+            </Link>
             <Link
               to="/setup"
               className="rounded-full bg-white/95 p-2 shadow-sm backdrop-blur"

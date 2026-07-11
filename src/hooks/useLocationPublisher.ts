@@ -91,8 +91,6 @@ export function useLocationPublisher(user: User | null) {
     setError(null)
 
     const handlePosition = (pos: GeolocationPosition) => {
-      if (document.visibilityState === 'hidden') return
-
       const point: GeoPoint = {
         lat: pos.coords.latitude,
         lng: pos.coords.longitude,
